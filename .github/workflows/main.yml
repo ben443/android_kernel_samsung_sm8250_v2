@@ -1,69 +1,22 @@
-name: Build STAGING Kernel
+name: kern3l
+run-name: kernel
 
 on:
   push:
-    branches:
-      - stock-10
-      - lineage-17.1
-  workflow_dispatch:  # Allows manual triggering
+    branches: [ rebase ]
+
+  workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
+    container:
+      image: nexgang/ubuntu:latest
 
     steps:
-    - name: Fetch sources
-      uses: actions/checkout@v4
-      with:
-        path: sources
-        submodules: true
-
-    - name: Install dependencies
-      run: |
-       ubuntu_codename=`lsb_release -c | cut -f2`
-       wget https://apt.llvm.org/llvm-snapshot.gpg.key
-       sudo apt-key add llvm-snapshot.gpg.key
-       sudo add-apt-repository "deb http://apt.llvm.org/$ubuntu_codename/ llvm-toolchain-$ubuntu_codename-$LLVM_VERSION main"
-       sudo apt-get update
-       sudo apt-get install -y clang-$LLVM_VERSION llvm-$LLVM_VERSION lld-$LLVM_VERSION
-       sudo apt-get install -y binutils-aarch64-linux-gnu gcc-aarch64-linux-gnu binutils-arm-linux-gnueabi gcc-arm-linux-gnueabi
-       sudo apt-get install -y libncurses-dev flex bison openssl libssl-dev dkms libelf-dev libudev-dev libpci-dev libiberty-dev autoconf
-       sudo ln -sf /usr/bin/clang-$LLVM_VERSION /usr/bin/clang
-       sudo ln -sf /usr/bin/ld.lld-$LLVM_VERSION /usr/bin/ld.lld
-       sudo ln -sf /usr/bin/llvm-ar-$LLVM_VERSION /usr/bin/llvm-ar
-       sudo ln -sf /usr/bin/llvm-nm-$LLVM_VERSION /usr/bin/llvm-nm
-       sudo ln -sf /usr/bin/llvm-objcopy-$LLVM_VERSION /usr/bin/llvm-objcopy
-       sudo ln -sf /usr/bin/llvm-objdump-$LLVM_VERSION /usr/bin/llvm-objdump
-       sudo ln -sf /usr/bin/llvm-strip-$LLVM_VERSION /usr/bin/llvm-strip
-       sudo ln -sf /usr/bin/llvm-config-$LLVM_VERSION /usr/bin/llvm-config
-      env:
-        LLVM_VERSION: 11
-
-
-    - name: Run kernel build script
-      run: ./build_kernel.sh x1q_chn_openx
-      working-directory: ${{ github.workspace }}/sources
-
-    - name: 'Upload artifact: Kernel Configuration (.config)'
-      uses: actions/upload-artifact@v4
-      with:
-        name: .config
-        path: ${{ github.workspace }}/sources/out/.config
-
-    - name: 'Upload artifact: Kernel Image (Image)'
-      uses: actions/upload-artifact@v4
-      with:
-        name: Image
-        path: ${{ github.workspace }}/sources/out/Image
-
-    - name: 'Upload artifact: Device Tree Blob Image (dtb.img)'
-      uses: actions/upload-artifact@v4
-      with:
-        name: dtb.img
-        path: ${{ github.workspace }}/sources/out/dtb.img
-
-    - name: 'Upload artifact: Device Tree Blob Overlay Image (dtbo.img)'
-      uses: actions/upload-artifact@v4
-      with:
-        name: dtbo.img
-        path: ${{ github.workspace }}/sources/out/dtbo.img
+      - uses: actions/checkout@v4
+      - name: Nexus Kernel Alioth
+        run: bash build_kernel.sh
+        env:
+           token: ${{ secrets.TOKEN }}
+           chat_id: ${{ secrets.CHAT_ID }}
