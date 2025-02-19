@@ -5,6 +5,7 @@ on:
     branches:
       - stock-10
       - lineage-17.1
+  workflow_dispatch:  # Allows manual triggering
 
 jobs:
   build:
@@ -12,7 +13,7 @@ jobs:
 
     steps:
     - name: Fetch sources
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         path: sources
         submodules: true
