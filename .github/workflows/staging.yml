@@ -13,7 +13,7 @@ jobs:
 
     steps:
     - name: Fetch sources
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         path: sources
         submodules: true
@@ -66,13 +66,13 @@ jobs:
       working-directory: ${{ github.workspace }}/sources
 
     - name: 'Upload artifact: Kernel Configuration (.config)'
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: .config
         path: ${{ github.workspace }}/sources/out/.config
 
     - name: 'Upload artifact: Kernel Image (Image)'
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: Image
         path: ${{ github.workspace }}/sources/out/Image
