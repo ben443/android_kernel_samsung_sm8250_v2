@@ -66,13 +66,13 @@ jobs:
       working-directory: ${{ github.workspace }}/sources
 
     - name: 'Upload artifact: Kernel Configuration (.config)'
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v3
       with:
         name: .config
         path: ${{ github.workspace }}/sources/out/.config
 
     - name: 'Upload artifact: Kernel Image (Image)'
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v3
       with:
         name: Image
         path: ${{ github.workspace }}/sources/out/Image
