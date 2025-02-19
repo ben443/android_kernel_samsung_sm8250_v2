@@ -39,13 +39,6 @@ jobs:
       env:
         LLVM_VERSION: 11
 
-    - name: Prepare ccache timestamp
-      id: ccache_cache_timestamp
-      shell: cmake -P {0}
-      run: |
-        string(TIMESTAMP current_date "%Y-%m-%d-%H;%M;%S" UTC)
-        message("::set-output name=timestamp::${current_date}")
-
 
     - name: Run kernel build script
       run: ./build_kernel.sh x1q_chn_openx
