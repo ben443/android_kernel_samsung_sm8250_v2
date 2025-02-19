@@ -46,20 +46,6 @@ jobs:
         string(TIMESTAMP current_date "%Y-%m-%d-%H;%M;%S" UTC)
         message("::set-output name=timestamp::${current_date}")
 
-    - name: ccache cache files
-      uses: actions/cache@v1
-      with:
-        path: ~/.ccache
-        key: kernel-ccache-${{ steps.ccache_cache_timestamp.outputs.timestamp }}
-        restore-keys: |
-            kernel-ccache-
-
-    - name: Install ccache
-      run: |
-        wget http://azure.archive.ubuntu.com/ubuntu/pool/main/c/ccache/ccache_3.7.7-1_amd64.deb
-        sudo dpkg -i ccache_3.7.7-1_amd64.deb
-        sudo ln -sf /usr/bin/ccache /usr/local/bin/clang
-        ccache -M 4.5
 
     - name: Run kernel build script
       run: ./build_kernel.sh x1q_chn_openx
